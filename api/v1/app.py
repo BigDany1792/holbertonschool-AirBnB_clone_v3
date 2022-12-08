@@ -1,34 +1,34 @@
 #!/usr/bin/python3
-''' Return the status of an API '''
-from flask import Flask
-from models import storage
+""" Method that starts a Flask web application """
 from api.v1.views import app_views
-from os import getenv  # to use environmental variables
+from flask import Flask
 from flask import jsonify
-from werkzeug.exceptions import HTTPException  # to use errorhandler
+from flask import make_response
+from models import storage
+import os
 
-
-# instance app variable from Flask class
 app = Flask(__name__)
-# register the blueprint app_views for use
+
 app.register_blueprint(app_views)
 
 
 @app.teardown_appcontext
-def teardown(self):
-    ''' Remove the current SQLAlchemy Session '''
+def close(self):
+    """ this method logs out the database session """
     storage.close()
 
 
-@app.errorhandler(HTTPException)
-def handle_exception(error):
-    ''' Use errorhandler to display 404 error page '''
-    return jsonify({"error": "Not found"}), 404
+@app.errorhandler(404)
+def not_found(error):
+    """ Error 404 """
+    return make_response(jsonify({'error': 'Not found'}), 404)
 
 
-if __name__ == '__main__':
-    # return env variable if it exists
-    # otherwise return second argument
-    host = getenv('HBNB_API_HOST', '0.0.0.0')
-    port = getenv('HBNB_API_PORT', '5000')
-    app.run(host=host, port=port, threaded=True, debug=True)
+if __name__ == "__main__":
+    app.run(
+            host=os.getenv("HBNB_API_HOST", '0.0.0.0'),
+            port=os.getenv("HBNB_API_PORT", 5000),
+            threaded=True,
+            debug=True
+           )
+# app.config["DEBUG"] = True
