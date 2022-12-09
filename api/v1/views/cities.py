@@ -10,7 +10,7 @@ from models import storage
 @app_views.route('/states/<string:state_id>/cities', methods=['GET'],
                  strict_slashes=False)
 def get_cities_from_state(state_id):
-    """Retrieves the list of all State objects, use GET method"""
+    """Method that retrieve a list of all cities by id"""
     state = storage.get(State, state_id)
     if (state is None):
         abort(404)
