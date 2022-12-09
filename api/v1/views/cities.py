@@ -26,7 +26,7 @@ def get_cities_by_name(city_id=None):
 
     city_object = storage.get(City, city_id)
     if city_object is None:
-        return jsonify({'Error': 'Not found'}), 404
+        abort(404)
 
     return jsonify(city_object.to_dict())
 
