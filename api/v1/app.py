@@ -9,6 +9,8 @@ import os
 
 app = Flask(__name__)
 
+#  To use any Flask Blueprint, you have
+#  to import it and then register it in the application
 app.register_blueprint(app_views)
 
 
