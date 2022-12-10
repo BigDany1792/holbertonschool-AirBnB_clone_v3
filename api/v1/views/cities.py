@@ -19,6 +19,7 @@ def get_cities_from_state(state_id):
 
     return (jsonify(all_cities))
 
+
 @app_views.route('/cities/<string:city_id>', methods=['GET'],
                  strict_slashes=False)
 def get_cities_by_name(city_id=None):
@@ -29,6 +30,7 @@ def get_cities_by_name(city_id=None):
         abort(404)
 
     return jsonify(city_object.to_dict())
+
 
 @app_views.route('/cities/<string:city_id>', methods=['DELETE'],
                  strict_slashes=False)
@@ -41,6 +43,7 @@ def delete_city(city_id):
         delete_city.delete()
         storage.save()
     return (jsonify({}), 200)
+
 
 @app_views.route('states/<string:state_id>/cities', methods=['POST'],
                  strict_slashes=False)
@@ -56,7 +59,7 @@ def post_city(state_id):
 
     if 'name' not in post_city:
         return (jsonify({'error': 'Missing name'}), 400)
-    
+
     if (type(post_city) is dict):
         post_city['state_id'] = state_id
         obj = City(**post_city)
@@ -65,6 +68,7 @@ def post_city(state_id):
         storage.save()
 
         return (jsonify(obj.to_dict()), 201)
+
 
 @app_views.route('/cities/<city_id>', methods=['PUT'],
                  strict_slashes=False)
