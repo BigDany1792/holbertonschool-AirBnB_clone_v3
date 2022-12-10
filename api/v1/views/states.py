@@ -11,6 +11,7 @@ from models import storage
 from flask import jsonify, abort, request
 from models.state import State
 
+
 #  Add views to app_views using the route decorator
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def all_states():
@@ -20,6 +21,7 @@ def all_states():
 
     return (jsonify(result))
 
+
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def states(state_id):
     """all object state"""
@@ -28,6 +30,7 @@ def states(state_id):
         abort(404)
     result = state.to_dict()
     return jsonify(result)
+
 
 @app_views.route('/states/<path:state_id>', methods=['DELETE'])
 def delete(state_id):
@@ -40,6 +43,7 @@ def delete(state_id):
         storage.save()
         return (jsonify({}), 200)
 
+
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def post_state():
     """Method that post a new state"""
@@ -51,6 +55,7 @@ def post_state():
     new_obj = State(**posted)
     new_obj.save()
     return jsonify(new_obj.to_dict()), 201
+
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def update_states_id(state_id):
