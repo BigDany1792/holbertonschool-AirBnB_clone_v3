@@ -5,8 +5,6 @@ from flask import jsonify, abort, request
 from models.user import User
 from models.place import Place
 from models.review import Review
-from models.city import City
-from models.state import State
 from models import storage
 
 
@@ -22,7 +20,9 @@ def get_reviews_from_places(places_id):
     if (reviews is None):
         abort(404)
 
-    return (jsonify([review.to_dict() for review in reviews]))
+    res = [review.to_dict() for review in reviews]
+
+    return (jsonify(res))
 
 
 @app_views.route('/reviews/<string:review_id>', methods=['GET'],
@@ -33,7 +33,8 @@ def get_review_id(review_id):
     if (review is None):
         abort(404)
 
-    return (jsonify(review.to_dict()))
+    res = review.to_dict()
+    return (jsonify(res))
 
 
 @app_views.route('/reviews/<string:review_id>', methods=['DELETE'],
@@ -47,7 +48,7 @@ def delete_review(review_id):
     review.delete()
     storage.save()
 
-    return (jsonify({}, 200))
+    return (jsonify({}), 200)
 
 
 @app_views.route('/places/<string:place_id>/reviews', methods=['POST'],
