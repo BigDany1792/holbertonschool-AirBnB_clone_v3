@@ -10,9 +10,9 @@ from models import storage
 
 @app_views.route('/places/<string:place_id>/reviews', methods=['GET'],
                  strict_slashes=False)
-def get_reviews_from_places(places_id):
+def get_reviews_from_places(place_id):
     """Method that retrieve a list of all reviews by places"""
-    place = storage.get(Place, places_id)
+    place = storage.get(Place, place_id)
     if (place is None):
         abort(404)
 
