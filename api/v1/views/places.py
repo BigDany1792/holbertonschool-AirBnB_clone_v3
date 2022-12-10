@@ -47,23 +47,28 @@ def delete_place(place_id):
                  strict_slashes=False)
 def post_place(city_id):
     """Method that post a new place by id"""
-    city = storage.get(City, city_id)
-    if city is None:
+    if not storage.get(City, city_id):
         abort(404)
-    data_place = request.get_json()
-    if type(data_place) != dict:
-        abort(400, description="Not a JSON")
-    if not data_place.get("user_id"):
-        abort(400, description="Missing user_id")
-    user = storage.get(User, data_place.get("user_id"))
-    if user is None:
-        abort(404)
-    if not data_place.get("name"):
-        abort(400, description="Missing name")
-    new_place = Place(**data_place)
-    new_place.city_id = city_id
-    new_place.save()
-    return jsonify(new_place.to_dict()), 201
+
+    data_place = request.get_json(silent=True)
+
+    if type(data_place) is dict:
+        new_place = Place(**data_place)
+        setattr(new_place, "city_id", city_id)
+
+        user = new_place.to_dict().get('user_id', None)
+        if not user:
+            return jsonify({'message': 'Missing user_id'}), 400
+        if not storage.get(User, user):
+            abort(404)
+
+        if not new_place.to_dict().get('name', None):
+            return jsonify({'message': 'Missing name'}), 400
+
+        new_place.save()
+        return jsonify(new_place.to_dict()), 201
+
+    return (jsonify({'message': 'Not a JSON'}), 400)
 
 
 @app_views.route('/places/<string:place_id>', methods=['PUT'],
