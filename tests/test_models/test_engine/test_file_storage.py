@@ -18,6 +18,8 @@ import json
 import os
 import pep8
 import unittest
+from models import storage
+from models.state import State
 FileStorage = file_storage.FileStorage
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -113,3 +115,22 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """Test validate the correct functionality of the method get"""
+        for _ in range(10):
+            new_state = State({"name": 'Erasing'})
+            storage.new(new_state)
+        storage.save()
+
+        all_states = storage.all(State)
+        key = next(iter(all_states))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """Test validate the correct functionality of the method count"""
+        for _ in range(10):
+            new_state = State({"name": 'Alabama'})
+            storage.new(new_state)
+        storage.save()
