@@ -119,18 +119,27 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_get(self):
         """Test validate the correct functionality of the method get"""
-        for _ in range(10):
+        for i in range(10):
             new_state = State({"name": 'Erasing'})
             storage.new(new_state)
         storage.save()
 
         all_states = storage.all(State)
         key = next(iter(all_states))
+        only_id = key.split('.')[0]
+
+        self.assertEqual(all_states[key], storage.get(State, only_id),
+                         'The object doesn\'t match')
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count(self):
         """Test validate the correct functionality of the method count"""
-        for _ in range(10):
+        for i in range(10):
             new_state = State({"name": 'Alabama'})
             storage.new(new_state)
         storage.save()
+
+        quantity_states = storage.all(State)
+
+        self.assertEqual(quantity_states, storage.count(State),
+                         'Cuantity of states doesn\'t match')
