@@ -2,6 +2,7 @@
 """ Method that starts a Flask web application """
 from api.v1.views import app_views
 from flask import Flask
+from flask_cors import CORS
 from flask import jsonify
 from flask import make_response
 from models import storage
@@ -12,6 +13,7 @@ app = Flask(__name__)
 #  To use any Flask Blueprint, you have
 #  to import it and then register it in the application
 app.register_blueprint(app_views)
+cors = CORS(app, resources={r"/api/*": {"origins": "0.0.0.0"}})
 
 
 @app.teardown_appcontext
